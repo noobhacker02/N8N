@@ -19,6 +19,8 @@ Replace manual invoice entry with an automated, AI-assisted pipeline.
 
 **Best for:**  
 Small finance teams, accountants, and businesses dependent on Google Sheets workflows.
+---
+<img width="828" height="222" alt="image" src="https://github.com/user-attachments/assets/2353d1a7-f324-4e21-af64-ac3ff9328103" />
 
 ---
 
@@ -36,6 +38,8 @@ Centralize invoice intake and automate the approval loop.
 
 **Best for:**  
 Finance, procurement, and operations teams requiring structure and speed.
+---
+<img width="700" height="342" alt="image" src="https://github.com/user-attachments/assets/51fbf67a-28c4-42a5-b596-bcbe553b37a7" />
 
 ---
 
@@ -53,6 +57,8 @@ Automate large-scale lead collection from Google Maps.
 
 **Best for:**  
 Sales and marketing teams that need clean, repeatable lead generation.
+---
+<img width="818" height="343" alt="image" src="https://github.com/user-attachments/assets/ba7412b9-afd8-438a-a015-75abfa6a9bb5" />
 
 ---
 
@@ -70,6 +76,8 @@ Consistent outreach without manual tracking.
 
 **Best for:**  
 Sales teams, freelancers, agencies, and consultants.
+---
+<img width="805" height="422" alt="image" src="https://github.com/user-attachments/assets/501b9be8-b49c-4298-9ccf-3518fde87217" />
 
 ---
 
@@ -87,6 +95,8 @@ Instant access to company knowledge without searching through folders.
 
 **Best for:**  
 Teams with large document libraries (HR, operations, onboarding, sales enablement).
+---
+<img width="722" height="316" alt="image" src="https://github.com/user-attachments/assets/3239c5e5-1147-4a03-89da-a2a6efeae4af" />
 
 ---
 
@@ -103,6 +113,8 @@ Reliable, accurate, scalable email support that adapts to query complexity.
 
 **Best for:**  
 SaaS teams, customer support teams, and small businesses handling high email volumes.
+---
+<img width="460" height="252" alt="image" src="https://github.com/user-attachments/assets/5b11494c-4632-4b96-9266-4e204c4d1966" />
 
 ---
 
@@ -128,6 +140,10 @@ This workflow blends **LLM reasoning + voice interactions + structured data logg
 
 **Best for:**  
 Service businesses, consultants, operations teams, or anyone needing automated call handling + scheduling + recordkeeping.
+
+---
+<img width="655" height="459" alt="image" src="https://github.com/user-attachments/assets/c24307b2-de39-4d66-8309-4006568191cc" />
+<img width="1907" height="865" alt="image" src="https://github.com/user-attachments/assets/7ac0a412-db05-4aad-a41f-3fe3102ede3f" />
 
 ---
 
