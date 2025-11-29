@@ -1,0 +1,360 @@
+{
+  "name": "AI Phone Agent with RetellAI",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Form",
+        "formDescription": "Contact Us",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "What is your Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What is your number",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Whats Your requirements",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1168,
+        -16
+      ],
+      "id": "8c4ee5d0-a60c-425c-b16e-6c370e24400b",
+      "name": "On form submission",
+      "webhookId": "aa8d06d8-2f29-4d83-8e66-00523e0df4ee"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.retellai.com/v2/create-phone-call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"from_number\": \"Add Virtual Number\",\n\"to_number\": \"{{ $json['Phone Number'] }}\",\n\"retell_llm_dynamic_variables\": {\n\"name\": \"{{ $json. Name }}\",\n\"email\": \"{{ $json.Email }}\",\n\"phone number\": \"{{ $json['Phone Number'] }}\",\n\"subject\": \"{{ $json. Subject }}\"\n},\n\"override_agent_id\": \"Add Your Agent ID\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -960,
+        -16
+      ],
+      "id": "2f60227c-791c-4fc9-ab66-588dca2ec9c3",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "edb1e894-1210-4902-a34f-a014bbdad8d8",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "25b4bfdf-9b98-4144-a0f2-9ac00b617f34",
+      "name": "n8n_rag_function",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -1200,
+        224
+      ],
+      "webhookId": "edb1e894-1210-4902-a34f-a014bbdad8d8",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b0b17c51-e5af-4534-b61e-71dccdb577e3",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        -224,
+        224
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.body.args.query }}",
+        "options": {
+          "systemMessage": "You are an AI-powered assistant for an electronics store. Answer in Italian. Your primary goal is to assist customers by providing accurate and helpful information about products, troubleshooting tips, and general support. Use the provided knowledge base (retrieved documents) to answer questions with precision and professionalism.\n\n**Guidelines**:\n1. **Product Information**:\n   - Provide detailed descriptions of products, including specifications, features, and compatibility.\n   - Highlight key selling points and differences between similar products.\n   - Mention availability, pricing, and promotions if applicable.\n\n2. **Technical Support**:\n   - Offer step-by-step troubleshooting guides for common issues.\n   - Suggest solutions for setup, installation, or configuration problems.\n   - If the issue is complex, recommend contacting the store’s support team for further assistance.\n\n3. **Customer Service**:\n   - Respond politely and professionally to all inquiries.\n   - If a question is unclear, ask for clarification to provide the best possible answer.\n   - For order-related questions (e.g., status, returns, or cancellations), guide customers on how to proceed using the store’s systems.\n\n4. **Knowledge Base Usage**:\n   - Always reference the provided knowledge base (retrieved documents) to ensure accuracy.\n   - If the knowledge base does not contain relevant information, inform the customer and suggest alternative resources or actions.\n\n5. **Tone and Style**:\n   - Use a friendly, approachable, and professional tone.\n   - Avoid technical jargon unless the customer demonstrates familiarity with the topic.\n   - Keep responses concise but informative.\n\n**Example Interactions**:\n1. **Product Inquiry**:\n   - Customer: \"What’s the difference between the XYZ Smartwatch and the ABC Smartwatch?\"\n   - AI: \"The XYZ Smartwatch features a longer battery life (up to 7 days) and built-in GPS, while the ABC Smartwatch has a brighter AMOLED display and supports wireless charging. Both are compatible with iOS and Android devices. Would you like more details on either product?\"\n\n2. **Technical Support**:\n   - Customer: \"My wireless router isn’t connecting to the internet.\"\n   - AI: \"Please try the following steps: 1) Restart your router and modem. 2) Ensure all cables are securely connected. 3) Check if the router’s LED indicators show a stable connection. If the issue persists, you may need to reset the router to factory settings. Would you like a detailed guide for resetting your router?\"\n\n3. **Customer Service**:\n   - Customer: \"How do I return a defective product?\"\n   - AI: \"To return a defective product, please visit our Returns Portal on our website and enter your order number. You’ll receive a return label and instructions. If you need further assistance, our support team is available at support@electronicsstore.com.\"\n\n**Limitations**:\n- If the question is outside the scope of the knowledge base or requires human intervention, inform the customer and provide contact details for the appropriate department.\n- Do not provide speculative or unverified information. Always rely on the knowledge base or direct the customer to official resources."
+        }
+      },
+      "id": "39990b30-8c82-41d0-b8f8-236db95fadbb",
+      "name": "Retrive Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -784,
+        224
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "name": "company_documents_tool",
+        "description": "Retrieve information from any company documents"
+      },
+      "id": "89547c63-a763-4176-b196-b14b4f893f8d",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        -512,
+        416
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "mode": "list",
+          "value": "company-files",
+          "cachedResultName": "company-files"
+        },
+        "options": {}
+      },
+      "id": "6f54d06e-5cdb-441b-b8e0-b3237203bbe1",
+      "name": "Pinecone Vector Store (Retrieval)",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "position": [
+        -608,
+        592
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "pineconeApi": {
+          "id": "CRxqgWRO0AIkShGa",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "e72500c2-bd7f-425d-87bd-2318b0cc415b",
+      "name": "Embeddings Google Gemini (retrieval)",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "position": [
+        -624,
+        752
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zU60zygfW8ZtsljD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "id": "1b92d796-9726-4e88-a5cd-2e3a72a0446a",
+      "name": "Google Gemini Chat Model (retrieval)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        -256,
+        592
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zU60zygfW8ZtsljD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        432
+      ],
+      "id": "a579af30-81e1-435d-ae33-8103668e2e7d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zU60zygfW8ZtsljD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "talhatalha1971@gmail.com",
+          "mode": "list",
+          "cachedResultName": "talhatalha1971@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -752,
+        528
+      ],
+      "id": "ece809c0-4645-4654-9223-8e01cc762c64",
+      "name": "Get an event in Google Calendar1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FWqoMQd62MljN2lu",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrive Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n_rag_function": {
+      "main": [
+        [
+          {
+            "node": "Retrive Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store (Retrieval)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini (retrieval)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store (Retrieval)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model (retrieval)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Retrive Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Retrive Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an event in Google Calendar1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Retrive Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fc64dace-7509-4a3e-97ff-15aa27ad56e3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "810931c2f288c909324a29f73011243db6eec57590b5a4056ff9e4ed19f7dbd3"
+  },
+  "id": "o88hoTigJU91xEPz",
+  "tags": [
+    {
+      "updatedAt": "2025-11-29T17:42:13.561Z",
+      "createdAt": "2025-11-29T17:42:13.561Z",
+      "id": "pBXE9CMELuDbmBjo",
+      "name": "GIT"
+    }
+  ]
+}
