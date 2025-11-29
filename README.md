@@ -2,6 +2,18 @@
 ### AI-Powered Workflow Collection for Real-World Business Teams
 
 A refined set of **7 production-ready automation systems** built using n8n, AI models (Gemini, OpenAI, Mistral), Retell Voice AI, and common business tools. These flows eliminate repetitive work, improve accuracy, and help teams operate at a higher level without extra engineering overhead.
+---
+## 📘 Quick Index — Workflow Overview
+
+| # | Workflow Name | What It Does (Short) |
+|---|---------------|-----------------------|
+| 1 | **Smart Invoice-to-Sheet Pipeline** | Extracts invoice data using AI and logs structured details into Google Sheets automatically. |
+| 2 | **AI Invoice Intake & Approval System** | Accepts invoices, extracts key fields, and manages approval/rejection through automated email loops. |
+| 3 | **Google Maps Lead Finder** | Pulls business leads from Google Maps based on ZIP codes/categories and stores clean results in Sheets. |
+| 4 | **Gmail Outreach + Smart Follow-Ups** | Sends campaigns + follow-ups only to non-responders, fully driven from a Google Sheets list. |
+| 5 | **AI Knowledge Assistant (RAG Chatbot)** | Answers employee questions by pulling context from company files stored in Google Drive. |
+| 6 | **AI Email Support Assistant** | Responds to customer emails using AI with a fallback model for complex queries; logs everything in Sheets. |
+| 7 | **Retell Voice AI — Calendar Checker & Call Logger** | Voice agent handles calls, checks calendar availability, collects caller info, and writes data to Sheets. |
 
 ---
 
