@@ -1,10 +1,10 @@
 # 🌟 n8n Automation Hub  
 ### AI-Powered Workflow Collection for Real-World Business Teams
 
-A refined set of **7 production-ready automation systems** built using n8n, AI models (Gemini, OpenAI, Mistral), Retell Voice AI, and common business tools. These flows eliminate repetitive work, improve accuracy, and help teams operate at a higher level without extra engineering overhead.
+A refined set of **7 production-ready automation systems** built using n8n, AI models (Gemini, OpenAI, Mistral), Retell Voice AI, and common business tools. These flows eliminate repetitive work, improve accuracy, and help teams operate at a higher level without extra engineering overhead. [add what tools or tech stack it uses]
 ---
 ## 📘 Quick Index — Workflow Overview
-
+[add what tools or tech stack it uses]
 | # | Workflow Name | What It Does (Short) |
 |---|---------------|-----------------------|
 | 1 | **Smart Invoice-to-Sheet Pipeline** | Extracts invoice data using AI and logs structured details into Google Sheets automatically. |
