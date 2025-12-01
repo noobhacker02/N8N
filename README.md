@@ -1,185 +1,212 @@
-# 🌟 n8n Automation Hub  
-### AI-Powered Workflow Collection for Real-World Business Teams
+# 🌟 n8n Automation Hub
+### AI-Powered Workflow Collection for Real-World Business Efficiency
 
-A refined set of **7 production-ready automation systems** built using n8n, AI models (Gemini, OpenAI, Mistral), Retell Voice AI, and common business tools. These flows eliminate repetitive work, improve accuracy, and help teams operate at a higher level without extra engineering overhead. [add what tools or tech stack it uses]
----
-## 📘 Quick Index — Workflow Overview
-[add what tools or tech stack it uses]
-| # | Workflow Name | What It Does (Short) |
-|---|---------------|-----------------------|
-| 1 | **Smart Invoice-to-Sheet Pipeline** | Extracts invoice data using AI and logs structured details into Google Sheets automatically. |
-| 2 | **AI Invoice Intake & Approval System** | Accepts invoices, extracts key fields, and manages approval/rejection through automated email loops. |
-| 3 | **Google Maps Lead Finder** | Pulls business leads from Google Maps based on ZIP codes/categories and stores clean results in Sheets. |
-| 4 | **Gmail Outreach + Smart Follow-Ups** | Sends campaigns + follow-ups only to non-responders, fully driven from a Google Sheets list. |
-| 5 | **AI Knowledge Assistant (RAG Chatbot)** | Answers employee questions by pulling context from company files stored in Google Drive. |
-| 6 | **AI Email Support Assistant** | Responds to customer emails using AI with a fallback model for complex queries; logs everything in Sheets. |
-| 7 | **Retell Voice AI — Calendar Checker & Call Logger** | Voice agent handles calls, checks calendar availability, collects caller info, and writes data to Sheets. |
+A refined collection of **8 production-ready automation systems** built using **n8n**, **Google Gemini**, **Mistral**, **Retell Voice AI**, and standard business tools. These workflows turn manual operational tasks into autonomous agents—handling everything from personal logistics to complex voice-driven data entry.
+
+> **Project Goal:** To create a "Second Brain" and automated workforce that eliminates repetitive admin work, improves data hygiene, and allows for infinite scaling of personal and business operations without adding headcount.
 
 ---
 
-## 📄 1. Smart Invoice-to-Sheet Pipeline
+## ⚡ Quick Index
 
-**Purpose:**  
-Replace manual invoice entry with an automated, AI-assisted pipeline.
-
-**How it works:**  
-- Detects new invoices in Google Drive  
-- Uses AI OCR (Mistral) for multilingual text extraction  
-- Captures vendor, date, totals, tax, line items  
-- Inserts structured rows into Google Sheets  
-- Optional add-ons: tax logic, currency conversion, validation, error handling  
-
-**Best for:**  
-Small finance teams, accountants, and businesses dependent on Google Sheets workflows.
----
-<img width="828" height="222" alt="image" src="https://github.com/user-attachments/assets/2353d1a7-f324-4e21-af64-ac3ff9328103" />
+| # | Workflow Name | Description |
+|---|---|---|
+| **1** | **Unified Telegram "Life OS" Agent** | **(Flagship)** A hyper-personalized AI agent acting as "Talha." Manages Calendar, Gmail, Contacts, & Tasks via Telegram with vision capabilities. |
+| **2** | **Smart Invoice-to-Sheet Pipeline** | Auto-extracts invoice data (OCR) from Drive and logs structured rows in Sheets. |
+| **3** | **AI Invoice Intake & Approval** | Routes invoices for email approval and tracks status; centralizes procurement. |
+| **4** | **Google Maps Lead Finder** | Scrapes and cleans business leads from Maps based on location/category. |
+| **5** | **Gmail Outreach Engine** | Automates cold outreach and smart follow-ups based on recipient engagement. |
+| **6** | **RAG Knowledge Assistant** | Chatbot that answers questions based on internal company files (Drive/Pinecone). |
+| **7** | **AI Email Support Bot** | Auto-drafts or sends replies to customer support tickets with complexity fallback. |
+| **8** | **Retell Voice Scheduler** | Voice agent that answers calls, checks Calendar availability, and books appointments. |
 
 ---
 
-## ✅ 2. AI-Based Invoice Intake & Approval System
+## 🧠 1. Unified Telegram "Life OS" Agent (The Flagship)
 
-**Purpose:**  
-Centralize invoice intake and automate the approval loop.
+**The "Second Brain" of the operation.** This is not just a chatbot; it is an autonomous agent designed to embody the user's specific persona ("Talha") to manage personal and professional logistics via a single chat interface.
 
-**How it works:**  
-- Accepts invoices via Gmail, Drive, or web uploads  
-- AI classifies and extracts core fields  
-- Routes invoices to approvers via email  
-- Tracks approval/rejection status + comments in Google Sheets  
-- Full traceability across the workflow  
+### 🛠 Tech Stack
+* **Orchestration:** n8n (Self-Hosted/Cloud)
+* **Core Brain:** Google Gemini 1.5 Flash (via LangChain Agent)
+* **Vision Engine:** Mistral Large (via HTTP Request) for image analysis
+* **Memory:** Window Buffer Memory (Short-term context retention)
+* **Integrations:** Google Calendar, Gmail, Google Contacts, Google Sheets, Airtable, Slack
+* **Protocol:** MCP (Model Context Protocol) for external tool connections
 
-**Best for:**  
-Finance, procurement, and operations teams requiring structure and speed.
----
-<img width="700" height="342" alt="image" src="https://github.com/user-attachments/assets/51fbf67a-28c4-42a5-b596-bcbe553b37a7" />
+### 🔍 Deep Dive: Capabilities & Logic
+This workflow is the most complex in the collection, featuring **65+ nodes** working in concert.
 
----
+1.  **Identity & Security Layer**
+    * **Persona Enforcement:** The system prompt forces the AI to "think, act, and speak like Talha," ensuring responses align with the user's specific tone and decision-making style.
+    * **Strict Authorization:** A **Switch Node** immediately validates the incoming Telegram `chat_id`. If the ID does not match the owner, the workflow terminates with a "Not Authorized" rejection, preventing unauthorized access to personal data.
 
-## 🗺 3. Google Maps Lead Finder
+2.  **Multi-Modal Vision (The "Eyes")**
+    * When an image is sent (e.g., a flyer, receipt, or handwritten note), the workflow branches to an **HTTP Request node** calling the **Mistral API**.
+    * It generates a detailed text description of the image, which is then fed back into the Gemini Agent.
+    * *Use Case:* Snap a photo of a wedding invitation -> Agent reads the date/time -> Agent adds it to Google Calendar automatically.
 
-**Purpose:**  
-Automate large-scale lead collection from Google Maps.
+3.  **Advanced Tool Usage (The "Hands")**
+    * **Calendar Management:** The agent uses 4 separate tools (`get`, `create`, `update`, `delete`) to manage schedule conflicts in real-time. It can "find a free slot next Tuesday" or "move my 3 PM meeting to 4 PM."
+    * **Gmail Command Center:** It can read unread emails, draft replies (saved to Drafts for review), send urgent emails immediately, and organize inboxes by adding labels.
+    * **CRM Control:** Direct access to **Google Contacts** allows the agent to create new contacts from chat ("Add Faizan, his number is...") or update existing details.
+    * **Audit Logging:** Every single interaction—what was asked, what was answered, and the timestamp—is appended to **Google Sheets** and **Airtable** for a permanent audit trail.
 
-**How it works:**  
-- Inputs: ZIP codes + business categories  
-- Queries Google Maps API  
-- Removes duplicates and noisy entries  
-- Stores verified results in Google Sheets  
-- Handles API rate limits with exponential backoff  
-
-**Best for:**  
-Sales and marketing teams that need clean, repeatable lead generation.
----
-<img width="818" height="343" alt="image" src="https://github.com/user-attachments/assets/ba7412b9-afd8-438a-a015-75abfa6a9bb5" />
+4.  **Extensibility via MCP**
+    * The workflow includes **MCP Client** nodes. This allows the n8n agent to connect to external "Model Context Protocol" servers, enabling it to execute local Python scripts or access tools that don't have standard APIs.
 
 ---
 
-## 📧 4. Gmail Auto Outreach + Smart Follow-Up Engine
+## 📄 2. Smart Invoice-to-Sheet Pipeline
 
-**Purpose:**  
-Consistent outreach without manual tracking.
+**Purpose:** Replaces manual data entry. The flow watches a Google Drive folder for new PDFs, uses AI to extract key fields, and appends a clean row to a master Finance Sheet.
 
-**How it works:**  
-- Recipients + templates stored in Google Sheets  
-- Sends initial outreach automatically  
-- Detects who replied and who didn’t  
-- Sends follow-ups only to non-responders  
-- Avoids weekend sends to protect domain reputation  
+### 🛠 Tech Stack
+* **Trigger:** Google Drive Trigger (File Created)
+* **OCR/Vision:** Google Gemini Vision or Mistral (via API)
+* **Data Processing:** JSON Parser
+* **Storage:** Google Sheets
 
-**Best for:**  
-Sales teams, freelancers, agencies, and consultants.
----
-<img width="805" height="422" alt="image" src="https://github.com/user-attachments/assets/501b9be8-b49c-4298-9ccf-3518fde87217" />
-
----
-
-## 🤖 5. AI Knowledge Assistant (RAG Chatbot for Company Files)
-
-**Purpose:**  
-Instant access to company knowledge without searching through folders.
-
-**How it works:**  
-- Auto-detects new/updated files in Google Drive  
-- Splits documents and generates embeddings (Gemini)  
-- Stores them in Pinecone for fast semantic retrieval  
-- Chat interface delivers context-rich answers  
-- Short-term memory enables natural multi-turn conversations  
-
-**Best for:**  
-Teams with large document libraries (HR, operations, onboarding, sales enablement).
----
-<img width="722" height="316" alt="image" src="https://github.com/user-attachments/assets/3239c5e5-1147-4a03-89da-a2a6efeae4af" />
+### ⚙️ How It Works
+1.  **Detection:** A specialized folder in Drive is monitored.
+2.  **Extraction:** New PDFs are downloaded and sent to the Vision model with a prompt to "Extract Invoice Number, Date, Vendor, Total, and Tax as JSON."
+3.  **Structuring:** The raw text response is cleaned and parsed into a valid JSON object.
+4.  **Logging:** Data is mapped to specific columns in the Finance Tracker sheet.
 
 ---
 
-## 📨 6. AI Email Support Assistant with Smart Fallback
+## ✅ 3. AI-Based Invoice Intake & Approval System
 
-**Purpose:**  
-Reliable, accurate, scalable email support that adapts to query complexity.
+**Purpose:** A governance layer for finance. Invoices are routed to managers for "Approve" or "Reject" decisions before payment.
 
-**How it works:**  
-- Reads incoming customer support emails  
-- Primary model (Gemini) handles quick replies  
-- Secondary model (GPT) handles complex requests or fallback scenarios  
-- Logs all interactions into Google Sheets  
+### 🛠 Tech Stack
+* **Input:** Email Trigger (IMAP) or Typeform
+* **Logic:** n8n Approval Node (Wait for Email Click)
+* **Notifications:** Gmail (SMTP)
+* **Tracking:** Google Sheets
 
-**Best for:**  
-SaaS teams, customer support teams, and small businesses handling high email volumes.
----
-<img width="460" height="252" alt="image" src="https://github.com/user-attachments/assets/5b11494c-4632-4b96-9266-4e204c4d1966" />
-
----
-
-## 🎤 7. Retell Voice AI — Calendar Checker + Vector-Based Call Intelligence
-
-**Purpose:**  
-A fully automated **voice agent** that can check availability, validate meeting details, confirm appointments, store structured insights, and write results to Google Sheets — all via natural phone conversations.
-
-**How it works:**  
-- Retell AI handles the call using natural, human-like voice  
-- The voice agent checks Google Calendar availability in real-time  
-- Uses Retell’s **vector database** to reference internal knowledge (scripts, policies, FAQs)  
-- Collects caller information through an inbuilt “call form”  
-- Once the caller confirms, data is automatically pushed to Google Sheets  
-- Final outputs include:  
-  - Caller details  
-  - Meeting date/time  
-  - Intent or request classification  
-  - Any additional notes captured from the conversation  
-
-**Why it stands out:**  
-This workflow blends **LLM reasoning + voice interactions + structured data logging** into a single automated system. It works as a receptionist, scheduler, and data logger — all in one.
-
-**Best for:**  
-Service businesses, consultants, operations teams, or anyone needing automated call handling + scheduling + recordkeeping.
-
----
-<img width="655" height="459" alt="image" src="https://github.com/user-attachments/assets/c24307b2-de39-4d66-8309-4006568191cc" />
-<img width="1907" height="865" alt="image" src="https://github.com/user-attachments/assets/7ac0a412-db05-4aad-a41f-3fe3102ede3f" />
+### ⚙️ How It Works
+1.  **Intake:** Invoice received via email.
+2.  **Routing:** n8n generates a unique "Approval Link" and emails it to the designated manager.
+3.  **Pause:** The workflow *pauses* execution and waits for the manager to click the link.
+4.  **Decision:**
+    * *If Approved:* Invoice is marked "Paid" in the sheet, and a confirmation is sent to the vendor.
+    * *If Rejected:* The sheet is updated, and the vendor gets a rejection notice with feedback.
 
 ---
 
-# 🔎 Executive Summary
+## 🗺 4. Google Maps Lead Finder
 
-The **n8n Automation Hub** provides teams with AI-powered systems that are:
+**Purpose:** A scaling tool for sales. Scrapes and cleans business leads from Google Maps based on location/category.
 
-- **Operationally impactful** — focused on real business use cases  
-- **Accurate** — AI models handle parsing, summarization, reasoning  
-- **Scalable** — works from small teams to full operations  
-- **Modular** — every workflow is standalone yet extendable  
-- **Compatible** — integrates with Google Workspace, Pinecone, Retell, and APIs you already use  
-- **Fast to deploy** — JSON imports + API keys + minor config
+### 🛠 Tech Stack
+* **Data Source:** Google Maps API (Places Text Search) or Serper.dev
+* **Processing:** JavaScript Code Node (Deduplication)
+* **Validation:** Phone Number Parser
+* **Output:** Google Sheets
 
-These workflows modernize everyday processes and give teams the speed and reliability of much larger organizations.
+### ⚙️ How It Works
+1.  **Input:** User provides a list of keywords (e.g., "Dentists in Dubai") and ZIP codes.
+2.  **Search:** The workflow iterates through the list, querying the Maps API for business names, phone numbers, and websites.
+3.  **Cleaning:** Results are filtered to remove duplicates and entries without contact info.
+4.  **Export:** A clean, actionable prospect list is generated in Sheets.
+
+---
+
+## 📧 5. Gmail Outreach + Smart Follow-Up Engine
+
+**Purpose:** A "set and forget" sales engine. Sends personalized emails and automatically follows up only if the lead hasn't responded.
+
+### 🛠 Tech Stack
+* **Database:** Google Sheets (Lead Status)
+* **Email:** Gmail Node (Send & Threading)
+* **AI:** OpenAI GPT-4o (Personalization)
+* **Logic:** Wait Nodes & If/Else Filters
+
+### ⚙️ How It Works
+1.  **Drafting:** AI reads the prospect's website/LinkedIn (if available) and writes a personalized opening line.
+2.  **Sending:** The initial email is sent.
+3.  **Monitoring:** The workflow waits for a set duration (e.g., 3 days).
+4.  **Check:** It checks the thread for a reply.
+    * *No Reply:* A polite follow-up is sent automatically.
+    * *Replied:* The workflow stops and alerts the sales rep.
 
 ---
 
-# 🚀 Deployment Steps
+## 📚 6. AI Knowledge Assistant (RAG)
 
-1. Import the provided workflow JSONs into your n8n instance  
-2. Add required API keys (Google, Gemini, OpenAI, Pinecone, Retell)  
-3. Update folder IDs, calendar IDs, email addresses, and sheet links  
-4. Run end-to-end tests with sample data  
-5. Deploy and customize based on team requirements  
+**Purpose:** An internal search engine. Employees ask questions and get answers based *only* on internal company files.
+
+### 🛠 Tech Stack
+* **Vector Database:** Pinecone
+* **Embedding Model:** text-embedding-3-small (OpenAI) or Gemini Embedding
+* **Chat Logic:** LangChain Retrieval QA
+* **Source:** Google Drive
+
+### ⚙️ How It Works
+1.  **Ingestion:** New PDFs in Drive are automatically text-split and converted into vector embeddings.
+2.  **Storage:** Vectors are stored in Pinecone.
+3.  **Retrieval:** When a user asks a question, the system searches Pinecone for the most relevant document chunks.
+4.  **Synthesis:** Gemini summarizes the chunks into a coherent answer, citing the source document.
 
 ---
+
+## 📨 7. AI Email Support Assistant
+
+**Purpose:** A Tier-1 support agent. Classifies customer intent and drafts responses, handling volume that would drown a human team.
+
+### 🛠 Tech Stack
+* **Trigger:** Gmail Trigger (New Email)
+* **Classifier:** Google Gemini Flash (Fast & Cheap)
+* **Complex Reasoner:** OpenAI GPT-4 (For hard cases)
+* **Output:** Gmail Drafts
+
+### ⚙️ How It Works
+1.  **Classification:** Incoming emails are tagged by intent (e.g., "Refund," "Technical Issue," "Spam").
+2.  **Routing:**
+    * *Simple:* Gemini Flash drafts a quick response based on FAQs.
+    * *Complex:* GPT-4 analyzes the issue and drafts a detailed troubleshooting guide.
+3.  **Review:** The reply is saved as a **Draft**. The support agent just reviews and hits "Send."
+
+---
+
+## 🎤 8. Retell Voice AI — Calendar Checker
+
+**Purpose:** A receptionist that never sleeps. Handles voice calls, checks live availability, and books appointments.
+
+### 🛠 Tech Stack
+* **Voice Engine:** Retell AI (Telephony & Speech-to-Text)
+* **Logic:** n8n Webhooks
+* **Calendar:** Google Calendar API
+* **Knowledge:** Retell Vector DB (for FAQs)
+
+### ⚙️ How It Works
+1.  **Call Start:** Retell answers the phone and greets the caller.
+2.  **Intent:** When the caller says "I want to book a meeting," Retell fires a webhook to n8n.
+3.  **Availability:** n8n checks Google Calendar for free slots in the next 3 days and returns them to Retell.
+4.  **Booking:** The caller picks a time. Retell sends the data back to n8n, which creates the Calendar event and sends a confirmation email.
+
+---
+
+## 🚀 Deployment Guide
+
+1.  **Import:** Load the `.json` workflow files into your n8n instance.
+2.  **Credentials:**
+    * **Google Cloud:** Create a project with OAuth scopes for Calendar, Gmail, Drive, Sheets, and Contacts. Connect to n8n.
+    * **AI Keys:** Add API keys for Gemini, Mistral, and OpenAI.
+    * **Telegram:** Create a bot via BotFather and add the Token to the Telegram nodes.
+3.  **Configuration:**
+    * **Auth:** In Workflow #1 (Telegram Agent), update the **Switch Node** to include your specific Telegram `chat_id`. **This is critical for security.**
+    * **IDs:** Replace placeholder IDs (Google Sheet ID, Calendar ID, Airtable Base ID) with your own asset IDs.
+4.  **Webhooks:** For the Invoice and Voice flows, update the webhook URLs in your external services (e.g., Retell dashboard) to point to your production n8n instance.
+
+## 🔐 Security Note
+
+* **PII:** These workflows process personal data (emails, contacts). Ensure logs are secured.
+* **Access Control:** The Telegram bot includes a hard-coded ID check. Do not remove this, or anyone on Telegram could manage your calendar.
+* **Secrets:** Never commit your n8n credential exports or JSON files containing raw API keys to public repositories.
+
+---
+
+**Author:** Talha Shaikh
+**License:** MIT
