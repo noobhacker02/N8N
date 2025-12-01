@@ -56,117 +56,11 @@ This workflow is the most complex in the collection, featuring **65+ nodes** wor
     * The workflow includes **MCP Client** nodes. This allows the n8n agent to connect to external "Model Context Protocol" servers, enabling it to execute local Python scripts or access tools that don't have standard APIs.
 
 ---
+<img width="1210" height="619" alt="image" src="https://github.com/user-attachments/assets/30048408-657f-406b-9b8b-edc39039c8da" />
 
-## 📄 2. Smart Invoice-to-Sheet Pipeline
+<img width="1334" height="721" alt="image" src="https://github.com/user-attachments/assets/46fddaef-7cc4-4aea-9b9d-a0d6d59ffc30" />
+<img width="1339" height="809" alt="image" src="https://github.com/user-attachments/assets/fea8da59-d770-4272-89b8-f784afce0201" />
 
-**Purpose:** Replaces manual data entry. The flow watches a Google Drive folder for new PDFs, uses AI to extract key fields, and appends a clean row to a master Finance Sheet.
-
-### 🛠 Tech Stack
-* **Trigger:** Google Drive Trigger (File Created)
-* **OCR/Vision:** Google Gemini Vision or Mistral (via API)
-* **Data Processing:** JSON Parser
-* **Storage:** Google Sheets
-
-### ⚙️ How It Works
-1.  **Detection:** A specialized folder in Drive is monitored.
-2.  **Extraction:** New PDFs are downloaded and sent to the Vision model with a prompt to "Extract Invoice Number, Date, Vendor, Total, and Tax as JSON."
-3.  **Structuring:** The raw text response is cleaned and parsed into a valid JSON object.
-4.  **Logging:** Data is mapped to specific columns in the Finance Tracker sheet.
-
----
-
-## ✅ 3. AI-Based Invoice Intake & Approval System
-
-**Purpose:** A governance layer for finance. Invoices are routed to managers for "Approve" or "Reject" decisions before payment.
-
-### 🛠 Tech Stack
-* **Input:** Email Trigger (IMAP) or Typeform
-* **Logic:** n8n Approval Node (Wait for Email Click)
-* **Notifications:** Gmail (SMTP)
-* **Tracking:** Google Sheets
-
-### ⚙️ How It Works
-1.  **Intake:** Invoice received via email.
-2.  **Routing:** n8n generates a unique "Approval Link" and emails it to the designated manager.
-3.  **Pause:** The workflow *pauses* execution and waits for the manager to click the link.
-4.  **Decision:**
-    * *If Approved:* Invoice is marked "Paid" in the sheet, and a confirmation is sent to the vendor.
-    * *If Rejected:* The sheet is updated, and the vendor gets a rejection notice with feedback.
-
----
-
-## 🗺 4. Google Maps Lead Finder
-
-**Purpose:** A scaling tool for sales. Scrapes and cleans business leads from Google Maps based on location/category.
-
-### 🛠 Tech Stack
-* **Data Source:** Google Maps API (Places Text Search) or Serper.dev
-* **Processing:** JavaScript Code Node (Deduplication)
-* **Validation:** Phone Number Parser
-* **Output:** Google Sheets
-
-### ⚙️ How It Works
-1.  **Input:** User provides a list of keywords (e.g., "Dentists in Dubai") and ZIP codes.
-2.  **Search:** The workflow iterates through the list, querying the Maps API for business names, phone numbers, and websites.
-3.  **Cleaning:** Results are filtered to remove duplicates and entries without contact info.
-4.  **Export:** A clean, actionable prospect list is generated in Sheets.
-
----
-
-## 📧 5. Gmail Outreach + Smart Follow-Up Engine
-
-**Purpose:** A "set and forget" sales engine. Sends personalized emails and automatically follows up only if the lead hasn't responded.
-
-### 🛠 Tech Stack
-* **Database:** Google Sheets (Lead Status)
-* **Email:** Gmail Node (Send & Threading)
-* **AI:** OpenAI GPT-4o (Personalization)
-* **Logic:** Wait Nodes & If/Else Filters
-
-### ⚙️ How It Works
-1.  **Drafting:** AI reads the prospect's website/LinkedIn (if available) and writes a personalized opening line.
-2.  **Sending:** The initial email is sent.
-3.  **Monitoring:** The workflow waits for a set duration (e.g., 3 days).
-4.  **Check:** It checks the thread for a reply.
-    * *No Reply:* A polite follow-up is sent automatically.
-    * *Replied:* The workflow stops and alerts the sales rep.
-
----
-
-## 📚 6. AI Knowledge Assistant (RAG)
-
-**Purpose:** An internal search engine. Employees ask questions and get answers based *only* on internal company files.
-
-### 🛠 Tech Stack
-* **Vector Database:** Pinecone
-* **Embedding Model:** text-embedding-3-small (OpenAI) or Gemini Embedding
-* **Chat Logic:** LangChain Retrieval QA
-* **Source:** Google Drive
-
-### ⚙️ How It Works
-1.  **Ingestion:** New PDFs in Drive are automatically text-split and converted into vector embeddings.
-2.  **Storage:** Vectors are stored in Pinecone.
-3.  **Retrieval:** When a user asks a question, the system searches Pinecone for the most relevant document chunks.
-4.  **Synthesis:** Gemini summarizes the chunks into a coherent answer, citing the source document.
-
----
-
-## 📨 7. AI Email Support Assistant
-
-**Purpose:** A Tier-1 support agent. Classifies customer intent and drafts responses, handling volume that would drown a human team.
-
-### 🛠 Tech Stack
-* **Trigger:** Gmail Trigger (New Email)
-* **Classifier:** Google Gemini Flash (Fast & Cheap)
-* **Complex Reasoner:** OpenAI GPT-4 (For hard cases)
-* **Output:** Gmail Drafts
-
-### ⚙️ How It Works
-1.  **Classification:** Incoming emails are tagged by intent (e.g., "Refund," "Technical Issue," "Spam").
-2.  **Routing:**
-    * *Simple:* Gemini Flash drafts a quick response based on FAQs.
-    * *Complex:* GPT-4 analyzes the issue and drafts a detailed troubleshooting guide.
-3.  **Review:** The reply is saved as a **Draft**. The support agent just reviews and hits "Send."
 
 ---
 
@@ -207,6 +101,141 @@ This workflow is the most complex in the collection, featuring **65+ nodes** wor
 * **Secrets:** Never commit your n8n credential exports or JSON files containing raw API keys to public repositories.
 
 ---
+<img width="1907" height="865" alt="Screenshot 2025-11-30 001259" src="https://github.com/user-attachments/assets/9ef47c23-847b-432a-99d0-b4fc1fc061a4" />
+<img width="655" height="459" alt="Screenshot 2025-11-30 001132" src="https://github.com/user-attachments/assets/be661551-34f2-4120-8ab7-b02d06149f54" />
+
+---
+
+
+## 📄 2. Smart Invoice-to-Sheet Pipeline
+
+**Purpose:** Replaces manual data entry. The flow watches a Google Drive folder for new PDFs, uses AI to extract key fields, and appends a clean row to a master Finance Sheet.
+
+### 🛠 Tech Stack
+* **Trigger:** Google Drive Trigger (File Created)
+* **OCR/Vision:** Google Gemini Vision or Mistral (via API)
+* **Data Processing:** JSON Parser
+* **Storage:** Google Sheets
+
+### ⚙️ How It Works
+1.  **Detection:** A specialized folder in Drive is monitored.
+2.  **Extraction:** New PDFs are downloaded and sent to the Vision model with a prompt to "Extract Invoice Number, Date, Vendor, Total, and Tax as JSON."
+3.  **Structuring:** The raw text response is cleaned and parsed into a valid JSON object.
+4.  **Logging:** Data is mapped to specific columns in the Finance Tracker sheet.
+
+---
+<img width="814" height="186" alt="image" src="https://github.com/user-attachments/assets/c571e15e-2260-4eb3-82d0-2983b3ec34df" />
+
+---
+
+## ✅ 3. AI-Based Invoice Intake & Approval System
+
+**Purpose:** A governance layer for finance. Invoices are routed to managers for "Approve" or "Reject" decisions before payment.
+
+### 🛠 Tech Stack
+* **Input:** Email Trigger (IMAP) or Typeform
+* **Logic:** n8n Approval Node (Wait for Email Click)
+* **Notifications:** Gmail (SMTP)
+* **Tracking:** Google Sheets
+
+### ⚙️ How It Works
+1.  **Intake:** Invoice received via email.
+2.  **Routing:** n8n generates a unique "Approval Link" and emails it to the designated manager.
+3.  **Pause:** The workflow *pauses* execution and waits for the manager to click the link.
+4.  **Decision:**
+    * *If Approved:* Invoice is marked "Paid" in the sheet, and a confirmation is sent to the vendor.
+    * *If Rejected:* The sheet is updated, and the vendor gets a rejection notice with feedback.
+
+---
+<img width="750" height="323" alt="image" src="https://github.com/user-attachments/assets/fa41b5b5-0e7c-49ac-adf4-0fd50ef777cc" />
+
+---
+
+## 🗺 4. Google Maps Lead Finder
+
+**Purpose:** A scaling tool for sales. Scrapes and cleans business leads from Google Maps based on location/category.
+
+### 🛠 Tech Stack
+* **Data Source:** Google Maps API (Places Text Search) or Serper.dev
+* **Processing:** JavaScript Code Node (Deduplication)
+* **Validation:** Phone Number Parser
+* **Output:** Google Sheets
+
+### ⚙️ How It Works
+1.  **Input:** User provides a list of keywords (e.g., "Dentists in Dubai") and ZIP codes.
+2.  **Search:** The workflow iterates through the list, querying the Maps API for business names, phone numbers, and websites.
+3.  **Cleaning:** Results are filtered to remove duplicates and entries without contact info.
+4.  **Export:** A clean, actionable prospect list is generated in Sheets.
+---
+<img width="807" height="341" alt="image" src="https://github.com/user-attachments/assets/946460f0-9969-451a-b5fe-7027b16b5c5e" />
+
+---
+
+## 📧 5. Gmail Outreach + Smart Follow-Up Engine
+
+**Purpose:** A "set and forget" sales engine. Sends personalized emails and automatically follows up only if the lead hasn't responded.
+
+### 🛠 Tech Stack
+* **Database:** Google Sheets (Lead Status)
+* **Email:** Gmail Node (Send & Threading)
+* **AI:** OpenAI GPT-4o (Personalization)
+* **Logic:** Wait Nodes & If/Else Filters
+
+### ⚙️ How It Works
+1.  **Drafting:** AI reads the prospect's website/LinkedIn (if available) and writes a personalized opening line.
+2.  **Sending:** The initial email is sent.
+3.  **Monitoring:** The workflow waits for a set duration (e.g., 3 days).
+4.  **Check:** It checks the thread for a reply.
+    * *No Reply:* A polite follow-up is sent automatically.
+    * *Replied:* The workflow stops and alerts the sales rep.
+
+---
+<img width="779" height="372" alt="image" src="https://github.com/user-attachments/assets/439b28c3-52a9-4bbf-8e0a-ee9be44f954e" />
+
+---
+
+## 📚 6. AI Knowledge Assistant (RAG)
+
+**Purpose:** An internal search engine. Employees ask questions and get answers based *only* on internal company files.
+
+### 🛠 Tech Stack
+* **Vector Database:** Pinecone
+* **Embedding Model:** text-embedding-3-small (OpenAI) or Gemini Embedding
+* **Chat Logic:** LangChain Retrieval QA
+* **Source:** Google Drive
+
+### ⚙️ How It Works
+1.  **Ingestion:** New PDFs in Drive are automatically text-split and converted into vector embeddings.
+2.  **Storage:** Vectors are stored in Pinecone.
+3.  **Retrieval:** When a user asks a question, the system searches Pinecone for the most relevant document chunks.
+4.  **Synthesis:** Gemini summarizes the chunks into a coherent answer, citing the source document.
+
+---
+<img width="732" height="305" alt="image" src="https://github.com/user-attachments/assets/ba4cb8a5-bb31-4c5b-8b53-780dc344fb65" />
+
+---
+
+## 📨 7. AI Email Support Assistant
+
+**Purpose:** A Tier-1 support agent. Classifies customer intent and drafts responses, handling volume that would drown a human team.
+
+### 🛠 Tech Stack
+* **Trigger:** Gmail Trigger (New Email)
+* **Classifier:** Google Gemini Flash (Fast & Cheap)
+* **Complex Reasoner:** OpenAI GPT-4 (For hard cases)
+* **Output:** Gmail Drafts
+
+### ⚙️ How It Works
+1.  **Classification:** Incoming emails are tagged by intent (e.g., "Refund," "Technical Issue," "Spam").
+2.  **Routing:**
+    * *Simple:* Gemini Flash drafts a quick response based on FAQs.
+    * *Complex:* GPT-4 analyzes the issue and drafts a detailed troubleshooting guide.
+3.  **Review:** The reply is saved as a **Draft**. The support agent just reviews and hits "Send."
+---
+<img width="543" height="264" alt="image" src="https://github.com/user-attachments/assets/3241e8da-2e78-423a-890b-3e6902c30327" />
+
+---
+
 
 **Author:** Talha Shaikh
 **License:** MIT
