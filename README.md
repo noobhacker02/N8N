@@ -28,7 +28,7 @@ A refined collection of **8 production-ready automation systems** built using **
 
 ### 🛠 Tech Stack
 * **Orchestration:** n8n (Self-Hosted/Cloud)
-* **Core Brain:** Google Gemini 1.5 Flash (via LangChain Agent)
+* **Core Brain:** Google Gemini 2.0 Flash (via LangChain Agent)
 * **Vision Engine:** Mistral Large (via HTTP Request) for image analysis
 * **Memory:** Window Buffer Memory (Short-term context retention)
 * **Integrations:** Google Calendar, Gmail, Google Contacts, Google Sheets, Airtable, Slack
