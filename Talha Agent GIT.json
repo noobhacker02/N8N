@@ -1,0 +1,1489 @@
+{
+  "name": "Talha Agent GIT",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "e2140c92-3f93-492f-93b8-09942730b3a8",
+      "name": "Telegram Trigger1",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1520,
+        352
+      ],
+      "webhookId": "6d90bff2-32dd-44fc-b11b-4217a615dfed",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "dB8uGNIPExAGTOm4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        896
+      ],
+      "id": "9ea393d9-2ae0-429f-9916-bbb40ad3a5cf",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zU60zygfW8ZtsljD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+        "text": "={{ $json.textEsc }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "MarkdownV2"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        624
+      ],
+      "id": "f3f6d6c9-36aa-41f1-88ab-f5dfe0a1a852",
+      "name": "Send a text message",
+      "webhookId": "9e29ad80-e247-4019-ac95-ce2ec1735d8a",
+      "credentials": {
+        "telegramApi": {
+          "id": "dB8uGNIPExAGTOm4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3b3bfb7-030a-4676-bfb3-1503f4fb6242",
+              "name": "session_id",
+              "value": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f305372a-f1b7-40da-b927-e12926369a17",
+              "name": "Time",
+              "value": "={{$now}}",
+              "type": "string"
+            },
+            {
+              "id": "13a38fa6-2855-4b0b-9b71-2e86f63220fc",
+              "name": "question",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        112
+      ],
+      "id": "00942cd8-1c79-4790-9302-3122bfe263f1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const text = item.json.output || '';\n  // Escape all Telegram MarkdownV2 reserved characters\n  const escaped = text.replace(/([_*[\\]()~`>#+\\-=|{}.!])/g, '\\\\$1');\n  item.json.textEsc = escaped;\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        368
+      ],
+      "id": "7a3c6c70-ad69-452a-8d7f-f5b10169cff6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "926c116e-93a1-434e-b549-77b22b628b7c",
+                    "leftValue": "={{ $json.message.chat.id }}",
+                    "rightValue": null,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ace7a263-1125-4e12-ad36-6f9bb2d40d42",
+                    "leftValue": "={{ $json.message.chat.id }}",
+                    "rightValue": null,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1328,
+        352
+      ],
+      "id": "6f680862-04e6-45a2-a7f7-513968b1cb83",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+        "text": "Sorry you are not Authorized to Use me 😭⛔",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1040,
+        592
+      ],
+      "id": "2a1adbc1-ad07-4899-9acb-07cd6b5ff046",
+      "name": "Send a text message1",
+      "webhookId": "4523fd8e-ff01-4376-aa59-115b93fdd019",
+      "credentials": {
+        "telegramApi": {
+          "id": "dB8uGNIPExAGTOm4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "talhatalha1971@gmail.com",
+          "mode": "list",
+          "cachedResultName": "talhatalha1971@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        1488
+      ],
+      "id": "c8c44fa6-cf7b-48d7-9de3-0f8bccdf1b3d",
+      "name": "Get an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FWqoMQd62MljN2lu",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "talhatalha1971@gmail.com",
+          "mode": "list",
+          "cachedResultName": "talhatalha1971@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {
+          "sendUpdates": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        1488
+      ],
+      "id": "42abbfe4-4b49-4c6e-abef-6289ec53133e",
+      "name": "Delete an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FWqoMQd62MljN2lu",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to Create an event on Google Calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "talhatalha1971@gmail.com",
+          "mode": "list",
+          "cachedResultName": "talhatalha1971@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `The start date & time of the meeting in ISO format`, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `The end date & time of the meeting in ISO format`, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', `This is the Event Description`, 'string') }}",
+          "showMeAs": "transparent",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        1488
+      ],
+      "id": "d652221f-2a59-438c-a1cc-529afcc316d0",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FWqoMQd62MljN2lu",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "talhatalha1971@gmail.com",
+          "mode": "list",
+          "cachedResultName": "talhatalha1971@gmail.com"
+        },
+        "limit": 10,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        1488
+      ],
+      "id": "df0cdcad-1a51-4524-ab25-661a22bf9288",
+      "name": "Get many events in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FWqoMQd62MljN2lu",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "talhatalha1971@gmail.com",
+          "mode": "list",
+          "cachedResultName": "talhatalha1971@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        1488
+      ],
+      "id": "525f499d-0987-46ae-a13c-0af0d4f7070d",
+      "name": "Update an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "FWqoMQd62MljN2lu",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.question }}",
+        "options": {
+          "systemMessage": "=You are Talha AI, fully embodying Talha Shaikh. Think, speak, and act exactly like Talha. All responses, reasoning, and interactions come from Talha’s perspective.  \n\nToday is {{ $now }}.\n\n---  \n### Identity\n- <add your own personlaity dumbo>\n- If unsure, reply “idk sir”.\n\n---  \n### Contacts\n- Search immediately (max 10 results).  \n- 0 matches → “No contacts found for ‘X’. Create? (yes/no)”  \n- 1 match → show info, ask next action (open/update/delete/message/nothing)  \n- 2–10 → show top 3, ask: “Reply 1/2/3 or ‘more’”  \n- Create/update/delete → explicit confirmation; collect name + email/phone minimum.  \n\n---  \n### Emails\n- Fetch latest X emails; summarize: Subject — From — snippet — Date  \n- Vague replies → repeat summary + ask: open/reply/forward/delete (number)  \n- Delete-by-name-draft: search → best match in draft → announce → delete automatically → report in plain text → log internally → undo option 30s.  \n- Drafts: collect To, Subject, Body, optional CC/BCC → confirm before sending.  \n\n---  \n### Calendar\n- Accept **verbal dates** (e.g., “4 December”) → parse to ISO date/dateTime  \n- All-day → `start.date` / `end.date` (end = start +1 day)  \n- Timed → convert to ISO `dateTime`, timezone Asia/Dubai  \n- Always check Conflict check if anything booked on that time : propose 3 nearest alternatives if slot busy  \n- Collect: title, start, end/duration, all_day, timezone; optional: description, attendees, location, reminders, recurrence  \n- Auto-generate description if missing; present in plain text  \n- Delete-by-name: search → best match → announce → delete → report → log → undo 30s  \n\n**Workflow sequence:** Ask → Verify → Validate → Confirm → Execute → Report  \n\n---  \n### Tasks & Misc\n- Normalize input, act immediately, propose next steps.  \n- Ask **one question at a time** if info missing.  \n- Never stall; always provide actionable next step.  \n\n---  \n### Errors & Safety\n- If search/API fails → report exact error, suggest next step  \n- Do not assume ambiguous info; confirm with user  \n- No raw JSON to user; all summaries, confirmations, errors in plain Talha voice  \n\n---  \n### Examples\n**Create All-day Event:**  \nUser: “Add Faizan’s birthday on 4 Dec.”  \nTalha: “Got it — ‘Faizan’s Birthday’, all-day Dec 4, 2025 (Asia/Dubai). Any description or attendees?” → confirm → create → “Done — Faizan’s Birthday added.”\n\n**Timed Event with Conflict:**  \nUser: “Schedule Project Sync 1 Dec 15:00–16:00.”  \nTalha: “Slot busy. Three nearest free slots: Dec 1 16:00–17:00; Dec 2 11:00–12:00; Dec 3 10:00–11:00. Which one?”  \n\n**Delete-by-Name-draft (Calendar/Email):**  \nUser: “Cancel Project Sync.”  \nTalha: “Found ‘Project Sync’ on 2025-12-01 15:00 (Asia/Dubai). Deleting now.” → “Done — deleted. Undo within 30s.”\n\n**Recent Emails:**  \nUser: “Show last 5 emails.”  \nTalha: “Here’s your last 5: 1) From Faizan — ‘Project Plan’ Nov 30: wants updated timeline. 2) HR — ‘Onboarding’ Nov 29: needs docs. Details on any?”\n\n**Draft Email:**  \nUser: “Draft email to Faizan: I’ll send plan tomorrow.”  \nTalha: “Draft ready: To Faizan, Subject: ‘Project Plan update’, Body: ‘Hey Faizan, I’ll send updated plan tomorrow. —Talha’. Save? (yes/no)”\n\n**Send Draft:**  \nUser: “Send that draft.”  \nTalha: “Confirm: send to faizan@example.com with subject ‘Project Plan update’? Reply YES.”  \n\n**Unknown:** “idk sir”\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        192,
+        368
+      ],
+      "id": "2843699e-13f7-44e1-9006-cb22ca3b502d",
+      "name": "AI"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger1').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -224,
+        896
+      ],
+      "id": "96b2e72a-509f-4f4f-9f1a-073b9ab7b362",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "path": "a65ac62f-999f-469b-a969-f45803590861"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        848
+      ],
+      "id": "aaaaeb6f-29e3-48b1-ab49-42cd8272440a",
+      "name": "MCP Server Trigger",
+      "webhookId": "a65ac62f-999f-469b-a969-f45803590861"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        1152
+      ],
+      "id": "7c980e54-c823-4c10-a304-cc128e1286ad",
+      "name": "Get many messages in Gmail",
+      "webhookId": "2183bb86-5dff-4dee-9fde-72961763325a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AJXl9EJnSUdNNPIG",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1264,
+        1312
+      ],
+      "id": "81b262e3-910a-42e6-9bce-efbbf4599d94",
+      "name": "Create a draft in Gmail",
+      "webhookId": "b5fbb689-8c56-41cc-93a0-1219a34f0efa",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AJXl9EJnSUdNNPIG",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        1008
+      ],
+      "id": "3f49ae64-8194-4d31-9618-0fe5936baf9f",
+      "name": "Send a message in Gmail",
+      "webhookId": "0ff5e178-5667-41c4-b9c5-776deee9320b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AJXl9EJnSUdNNPIG",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "labelIds": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Label_Names_or_IDs', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1136,
+        1312
+      ],
+      "id": "88b7b96e-9788-4dc5-b89b-bce6ae6e7a44",
+      "name": "Add label to message in Gmail",
+      "webhookId": "233307f5-9501-41cd-8da6-a94022497140",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AJXl9EJnSUdNNPIG",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1408,
+        1312
+      ],
+      "id": "9dc90c89-a159-43df-a2ed-9c43e9138ac0",
+      "name": "Get many drafts in Gmail",
+      "webhookId": "c0d19feb-4182-4395-bd10-8289f0341e69",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AJXl9EJnSUdNNPIG",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "14Qz_z38I8Iopc6sk3yotkyc2qaj-eLFRQBDOLKDNTZI",
+          "mode": "list",
+          "cachedResultName": "Telegram",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Qz_z38I8Iopc6sk3yotkyc2qaj-eLFRQBDOLKDNTZI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14Qz_z38I8Iopc6sk3yotkyc2qaj-eLFRQBDOLKDNTZI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "User Name": "={{ $('Telegram Trigger1').item.json.message.from.first_name }}{{ $('Telegram Trigger1').item.json.message.from.last_name }}",
+            "What asked": "={{ $('Telegram Trigger1').item.json.message.text }}",
+            "Time": "={{ $('Edit Fields').item.json.Time }}",
+            "What responded": "={{ $json.textEsc }}"
+          },
+          "matchingColumns": [
+            "User Name"
+          ],
+          "schema": [
+            {
+              "id": "User Name",
+              "displayName": "User Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "What asked",
+              "displayName": "What asked",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "What responded",
+              "displayName": "What responded",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        112
+      ],
+      "id": "8f5ada6f-86cf-4597-b071-46c31958f63d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0zvLPkHjnaXibUtd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "<your end point>",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        1488
+      ],
+      "id": "37591d17-1010-40b9-bd39-1378112ee2f9",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A1G0QV996",
+          "mode": "list",
+          "cachedResultName": "team_test_n8n"
+        },
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_Text', `This is the message which needs to be send to slack`, 'string') }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slackTool",
+      "typeVersion": 2.3,
+      "position": [
+        -224,
+        1488
+      ],
+      "id": "4d6da216-8d30-4684-8245-79bf84ae2bce",
+      "name": "Send a message in Slack",
+      "webhookId": "d942af60-dabe-474a-aa12-efb9cd4529b6",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "K0bawhvuxdIS099l",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "fields": [
+          "names",
+          "emailAddresses"
+        ],
+        "useQuery": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Query', ``, 'boolean') }}",
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "rawData": true,
+        "options": {}
+      },
+      "id": "f573f9e0-bfef-420f-b256-557a966354e7",
+      "name": "Get Contacts",
+      "type": "n8n-nodes-base.googleContactsTool",
+      "position": [
+        -480,
+        1312
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "W0fGpdlQGB797ByA",
+          "name": "Google Contacts account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "01e90a0b-6f53-40d0-a8d3-a05c34a46fbb"
+      },
+      "id": "8530d191-ebbd-4cdf-9272-fa175f0edf61",
+      "name": "Google Contacts MCP",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        -736,
+        1040
+      ],
+      "webhookId": "01e90a0b-6f53-40d0-a8d3-a05c34a46fbb",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "familyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Family_Name', ``, 'string') }}",
+        "givenName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Given_Name', ``, 'string') }}",
+        "additionalFields": {
+          "emailsUi": {
+            "emailsValues": [
+              {
+                "type": "home",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('emailsValues0_Value', ``, 'string') }}"
+              }
+            ]
+          },
+          "phoneUi": {
+            "phoneValues": [
+              {
+                "type": "main",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phoneValues0_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        1312
+      ],
+      "id": "1f21e5ec-97d4-461b-81ae-0f1d181d0bf6",
+      "name": "Create a contact in Google Contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "W0fGpdlQGB797ByA",
+          "name": "Google Contacts account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "contactId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', ``, 'string') }}",
+        "fields": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fields', ``, 'string') }}",
+        "updateFields": {
+          "emailsUi": {
+            "emailsValues": [
+              {
+                "type": "home",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('emailsValues0_Value', ``, 'string') }}"
+              }
+            ]
+          },
+          "phoneUi": {
+            "phoneValues": [
+              {
+                "type": "main",
+                "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phoneValues0_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        1312
+      ],
+      "id": "a66fe26c-f75f-41ef-bd23-12e8d58aec47",
+      "name": "Update a contact in Google Contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "W0fGpdlQGB797ByA",
+          "name": "Google Contacts account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "contactId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.googleContactsTool",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        1312
+      ],
+      "id": "e299d97b-988d-4756-9e0a-1732b87ac1c7",
+      "name": "Delete a contact in Google Contacts",
+      "credentials": {
+        "googleContactsOAuth2Api": {
+          "id": "W0fGpdlQGB797ByA",
+          "name": "Google Contacts account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "<your end point>",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        544,
+        1488
+      ],
+      "id": "285beefd-ad03-4764-9da5-5e6510a2f2d0",
+      "name": "MCP Client1"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "delete",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Draft_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        1312
+      ],
+      "id": "b890d7f8-3d07-4fdb-97d9-3fa585bcc91b",
+      "name": "Delete a draft in Gmail",
+      "webhookId": "70be7807-0073-4546-9f61-4c78d665ece6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "AJXl9EJnSUdNNPIG",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "=appjcHHN64S3YH3tE",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl0vfEpvvHqEA4Gs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appjcHHN64S3YH3tE/tbl0vfEpvvHqEA4Gs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Telegram Trigger1').item.json.message.from.first_name }}{{ $('Telegram Trigger1').item.json.message.from.last_name }}",
+            "what asked": "={{ $('Telegram Trigger1').item.json.message.text }}",
+            "What responded": "={{ $json.textEsc }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "what asked",
+              "displayName": "what asked",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "What responded",
+              "displayName": "What responded",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        896,
+        368
+      ],
+      "id": "78e5ecd2-b5aa-490f-b05a-e5749f633547",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "jlLTmiFoWI9lfBKb",
+          "name": "Airtable Personal Access Token account 2 (perosnla account)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[1].file_id }}",
+        "additionalFields": {
+          "mimeType": "="
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -880,
+        368
+      ],
+      "id": "1db7690a-ad5b-480d-a904-7842098930c2",
+      "name": "Get a file - non comp",
+      "webhookId": "c5ab369e-7271-4db9-b8cc-f4f8fa4987c2",
+      "credentials": {
+        "telegramApi": {
+          "id": "dB8uGNIPExAGTOm4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "3421ce54-2c7c-4c87-ab7f-a4598eaa7f6b",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "85c06561-3e1d-4871-af64-f08e5f657b24",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notExists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "07dba98d-a8cb-4279-bed4-53bef6f39cbf",
+      "name": "Switch1",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -1072,
+        144
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer "
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"mistral-small-2506\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"text\",\n          \"text\": \"{{ $('Telegram Trigger1').item.json.message.caption }}\"\n        },\n        {\n          \"type\": \"image_url\",\n          \"image_url\": \"https://api.telegram.org/file/bot<bot_code>/{{$json.result.file_path}}\" \n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -640,
+        368
+      ],
+      "id": "d03316f1-d4d4-4272-9ca7-78b0e69af782",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fb99c3e1-af66-4b45-9b1d-fe78c7ca9854",
+              "leftValue": "={{ $json.choices[0].message.content }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -432,
+        128
+      ],
+      "id": "59ff3563-6b0d-4ac8-a641-d8af9dcae0ac",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ede86432-59f6-49e9-9066-329103928860",
+              "name": "content",
+              "value": "={{ $('Telegram Trigger1').item.json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        -64
+      ],
+      "id": "9d24b734-8d65-475e-8185-9914d8aa3347",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b049c877-5b6d-4dda-94e4-0438d1ecce04",
+              "name": "content",
+              "value": "=user asks \"{{ $('Telegram Trigger1').item.json.message.caption }}\" and after running image recognition it we can see its \"{{ $('HTTP Request1').item.json.choices[0].message.content }}\" so now describe the user what it is add more into it and state some interesting fact regarding it",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        352
+      ],
+      "id": "566e50f8-d2e0-4435-b2be-91cd1112b12b",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many drafts in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Slack": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Contacts MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a contact in Google Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Contacts MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a contact in Google Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Contacts MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a contact in Google Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "Google Contacts MCP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file - non comp": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file - non comp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "150b0cac-4fd0-41c5-b6b7-c6706d6b7cba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "810931c2f288c909324a29f73011243db6eec57590b5a4056ff9e4ed19f7dbd3"
+  },
+  "id": "SZEGrezJithuFZmK",
+  "tags": [
+    {
+      "updatedAt": "2025-11-29T17:42:13.561Z",
+      "createdAt": "2025-11-29T17:42:13.561Z",
+      "id": "pBXE9CMELuDbmBjo",
+      "name": "GIT"
+    }
+  ]
+}
